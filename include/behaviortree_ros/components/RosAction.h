@@ -96,7 +96,7 @@ private:
     {
         OptionsT options = OptionsT();
 
-        options.goal_response_callback = [&](const rclcpp_action::ClientGoalHandle<ActionT>::SharedPtr &goal)
+        options.goal_response_callback = [&](std::shared_future<std::shared_ptr<rclcpp_action::ClientGoalHandle<ActionT>>> goal)
         {
             if (!goal)
             {
