@@ -96,9 +96,9 @@ private:
     {
         OptionsT options = OptionsT();
 
-        options.goal_response_callback = [&](std::shared_future<std::shared_ptr<rclcpp_action::ClientGoalHandle<ActionT>>>)
+        options.goal_response_callback = [&](const rclcpp_action::ClientGoalHandle<ActionT>::SharedPtr &goal)
         {
-            if (!future_.get())
+            if (!goal)
             {
                 progress_.set_fail("Goal was rejected!");
             }
