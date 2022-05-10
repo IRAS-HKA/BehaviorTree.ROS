@@ -98,7 +98,7 @@ private:
 
         options.goal_response_callback = [&](std::shared_future<std::shared_ptr<rclcpp_action::ClientGoalHandle<ActionT>>> goal)
         {
-            if (!goal)
+            if (!goal.get())
             {
                 progress_.set_fail("Goal was rejected!");
             }
