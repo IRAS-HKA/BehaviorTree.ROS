@@ -95,18 +95,9 @@ private:
     void send_()
     {
         OptionsT options = OptionsT();
+        using namespace std::placeholders;
 
-        options.goal_response_callback = [&](std::shared_ptr<rclcpp_action::ClientGoalHandle<ActionT>> goal)
-        {
-            if (!goal)
-            {
-                progress_.set_fail("Goal was rejected!");
-            }
-            else
-            {
-                progress_.next_step("Goal accepted.");
-            }
-        };
+        options.goal_response_callback = std::bind(&RosAction::goal_response_callback, get_node_handle(), _1);
 
         options.feedback_callback = [&](std::shared_ptr<rclcpp_action::ClientGoalHandle<ActionT>>, const std::shared_ptr<const FeedbackT> feedback)
         {
@@ -141,5 +132,20 @@ private:
         future_ = client_->async_send_goal(goal_, options);
 
         progress_.next_step("Goal sent.");
+    }
+
+    void goal_response_callback(std::shared_future<rclcpp_action::ClientGoalHandle<ActionT>::SharedPtr> future)
+    {
+        auto goal_handle = future.get();
+        if (!goal_handle)
+        {
+            RCLCPP_ERROR(get_node_handle()->get_logger(), "Goal was rejected by server");
+            progress_.set_fail("Goal was rejected!");
+        }
+        else
+        {
+            RCLCPP_INFO(get_node_handle()->get_logger(), "Goal accepted by server, waiting for result");
+            progress_.next_step("Goal accepted.");
+        }
     }
 };
