@@ -1,5 +1,7 @@
 # BehaviorTree.ROS
 
+Experimental branch with new Galactic action signature
+
 This package is a wrapper around the [BehaviorTree.cpp](https://www.behaviortree.dev/) package.
 
 It provides an easy to use API for ROS2 services and actions inside a BehaviorTree node.
